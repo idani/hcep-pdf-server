@@ -1,5 +1,8 @@
 # hcep-pdf-server
 
+This forked from https://github.com/uyamazak/hcep-pdf-server
+
+
 Simple and fast PDF rendering server using Headless Chrome & Express & Puppeteer.
 
 Headless Chrome
@@ -22,7 +25,7 @@ Since this product is supposed to be used within local network (like Kubernetes,
 git clone this repository.
 
 
-### (optionary) Install fonts
+### (optionary) Add fonts
 If you convert pages in Japanese, Chinese or languages other than English, you will need to install each font files. Also, you can use WEB fonts, but since it takes a long time for requesting and downloading them, we recommend that install the font files in the server.
 
 
@@ -34,18 +37,16 @@ cp AnyFonts.ttf ./fonts/
 ### Build image
 
 ```
-sudo docker build -t hcep-pdf-server:latest .
+ docker-compose build
 ```
 
 ### Run
 
-Below example, run with 8000 port.
+Below example, run with 80 port.
 
 ```
-sudo docker run -it --rm \
-    -p 8000:8000 \
-    --name hcep-pdf-server \
-    hcep-pdf-server:latest
+ docker-compose up -d
+
 ```
 
 ## Example
@@ -53,8 +54,15 @@ sudo docker run -it --rm \
 ### Get request with url parameter
 
 ```
-curl "http://localhost:8000?url=http://example.com" -o hcep-pdf-get.pdf
+curl "http://localhost?url=http://example.com" -o hcep-pdf-get.pdf
 ```
+
+### Get request with url parameter
+
+```
+curl "http://localhost/screenshot?url=http://example.com" -o hcep-pdf-get.pdf
+```
+
 
 ### POST request with html parameter
 

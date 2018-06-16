@@ -44,7 +44,7 @@
     }
   }
   console.log("pdfOptions\n", pdfOptions)
-  const chromeBinary = '/usr/bin/google-chrome'
+  const chromeBinary = '/usr/bin/chromium-browser'
   const launchOptions = {
     args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
     executablePath: chromeBinary,
@@ -100,6 +100,40 @@
       res.contentType("application/pdf")
       res.send(buff)
       res.end()
+    } catch (e) {
+      console.log(e)
+      res.status(503)
+      res.end()
+    }
+  })
+
+  /**
+   * Receive get request with target page's url
+   * @req.query.url {String} page's url
+   * @req.query.pdf_option {String} a key of pdfOptions
+   * @return binary of PDF or error response
+   */
+  app.get('/screenshot', async (req, res) => {
+    const url = req.query.url
+    if (!url) {
+      res.status(400)
+      res.end('get parameter "url" is not set')
+      return
+    }
+    try {
+      console.time('SCREENSHOT_FROM_URL')
+      await page.goto(
+        url, {
+          timeout: pageTimeoutMsec,
+          waitUntil: ["load", "domcontentloaded"]
+        }
+      )
+      const buff = await page.screenshot({ fullPage: true })
+      console.timeEnd('SCREENSHOT_FROM_CONTENT')
+      await res.status(200)
+      await res.contentType("image/png")
+      await res.send(buff)
+      await res.end()
     } catch (e) {
       console.log(e)
       res.status(503)

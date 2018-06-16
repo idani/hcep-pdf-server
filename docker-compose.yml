@@ -1,0 +1,10 @@
+version: "2"
+
+services:
+
+  chrome:
+    build: headless_chrome
+    ports:
+      - "80:8000"
+    volumes:
+      - /d_dev:/d_dev
